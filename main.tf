@@ -17,7 +17,7 @@ module "runners" {
   environment = local.environment
   tags = {
     Site = "CompilerExplorer"
-    Type = "CI"
+    Subsystem = "CI"
   }
 
   github_app = {
