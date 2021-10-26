@@ -11,8 +11,8 @@ module "runners" {
   source = "philips-labs/github-runner/aws"
 
   aws_region = local.aws_region
-  vpc_id     = module.vpc.vpc_id
-  subnet_ids = module.vpc.private_subnets
+  vpc_id     = "vpc-17209172"
+  subnet_ids = ["subnet-690ed81e", "subnet-1bed1d42"]
 
   environment = local.environment
   tags = {
