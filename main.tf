@@ -42,6 +42,8 @@ module "runners" {
     "c5a.8xlarge",
   ]
 
+  # TODO I had to add the group manually to the EFS thing, this didn't work, but leaving here for thinking
+  runner_additional_security_group_ids = ["sg-0efc9951eaa9b5233"]  # BuilderNodeSecGroup
   # enable access to the runners via SSM
   enable_ssm_on_runners = true
 

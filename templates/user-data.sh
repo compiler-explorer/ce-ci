@@ -13,6 +13,7 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y \
     git \
     uidmap \
     build-essential \
+    nfs-client \
     unzip
 
 USER_NAME=runners
@@ -65,6 +66,15 @@ ${install_config_runner}
 cd /home/$USER_NAME/actions-runner/
 echo DOCKER_HOST=unix:///run/user/$USER_ID/docker.sock >>.env
 echo PATH=/home/$USER_NAME/bin:$PATH >>.env
+
+# Mount /efs
+mkdir -p /efs
+echo "fs-db4c8192.efs.us-east-1.amazonaws.com:/ /efs nfs nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport 0 0" >>/etc/fstab
+mount -a
+
+ln -s /efs/squash-images /opt/squash-images
+ln -s /efs/compiler-explorer /opt/compiler-explorer
+
 
 ${post_install}
 
