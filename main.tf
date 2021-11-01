@@ -80,13 +80,5 @@ module "runners" {
     }
   ]
 
-  # Uncommet idle config to have idle runners from 9 to 5 in time zone Amsterdam
-  # idle_config = [{
-  #   cron      = "* * 9-17 * * *"
-  #   timeZone  = "Europe/Amsterdam"
-  #   idleCount = 1
-  # }]
-
-  # disable KMS and encryption
-  # encrypt_secrets = false
+  runners_maximum_count = 4
 }
