@@ -34,9 +34,9 @@ module "runners" {
   runner_extra_labels         = "ubuntu,ce"
 
   instance_types = [
-    "c4.4xlarge",
-    "c5.4xlarge",
-    "c5a.4xlarge",
+    # "c4.4xlarge",
+    # "c5.4xlarge",
+    # "c5a.4xlarge",
     "c4.8xlarge",
     "c5.8xlarge",
     "c5a.8xlarge",
