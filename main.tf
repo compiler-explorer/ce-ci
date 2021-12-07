@@ -76,5 +76,5 @@ module "runners" {
     }
   ]
 
-  runners_maximum_count = 4
+  runners_maximum_count = 8
 }
