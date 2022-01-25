@@ -60,10 +60,10 @@ echo export PATH=/home/$USER_NAME/bin:$PATH >>/home/$USER_NAME/.profile
 loginctl enable-linger $USER_NAME
 su -l $USER_NAME -c "systemctl --user enable docker"
 
-${install_config_runner}
+${install_runner}
 
 # config runner for rootless docker
-cd /home/$USER_NAME/actions-runner/
+cd /opt/actions-runner/
 echo DOCKER_HOST=unix:///run/user/$USER_ID/docker.sock >>.env
 echo PATH=/home/$USER_NAME/bin:$PATH >>.env
 
@@ -75,7 +75,8 @@ mount -a
 ln -s /efs/squash-images /opt/squash-images
 ln -s /efs/compiler-explorer /opt/compiler-explorer
 
-
 ${post_install}
 
-./svc.sh start
+cd /opt/actions-runner
+
+${start_runner}
