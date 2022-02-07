@@ -71,6 +71,12 @@ mkdir -p /efs
 echo "fs-db4c8192.efs.us-east-1.amazonaws.com:/ /efs nfs nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport 0 0" >>/etc/fstab
 mount -a
 
+# install build packages for ce
+DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    python3.8-venv \
+    squashfs-tools \
+    libncurses5
+
 ln -s /efs/squash-images /opt/squash-images
 ln -s /efs/compiler-explorer /opt/compiler-explorer
 
