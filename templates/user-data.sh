@@ -16,8 +16,7 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y \
     nfs-client \
     unzip
 
-USER_NAME=runners
-useradd -m -s /bin/bash $USER_NAME
+USER_NAME=ubuntu
 USER_ID=$(id -ru $USER_NAME)
 
 # install and configure cloudwatch logging agent
