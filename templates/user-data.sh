@@ -79,6 +79,7 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y \
 
 ln -s /efs/squash-images /opt/squash-images
 ln -s /efs/compiler-explorer /opt/compiler-explorer
+ln -s /efs/wine-stable /opt/wine-stable
 
 ${post_install}
 
