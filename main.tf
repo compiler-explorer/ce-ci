@@ -37,6 +37,12 @@ module "runners" {
   instance_types = [
     "c5.8xlarge",
     "c5a.8xlarge",
+    "c6i.8xlarge",
+    "c6a.8xlarge",
+    "c5.16xlarge",
+    "c5a.16xlarge",
+    "c6i.16xlarge",
+    "c6a.16xlarge",
   ]
 
   # TODO I had to add the group manually to the EFS thing, this didn't work, but leaving here for thinking
