@@ -9,13 +9,13 @@ resource "random_password" "random" {
 
 module "runners" {
   source = "philips-labs/github-runner/aws"
-  version = "0.32.0"
+  version = "1.10.0"
 
   aws_region = local.aws_region
   vpc_id     = "vpc-17209172"
   subnet_ids = ["subnet-690ed81e", "subnet-1bed1d42"]
 
-  environment = local.environment
+  prefix = local.environment
   tags = {
     Site = "CompilerExplorer"
     Subsystem = "CI"
@@ -58,10 +58,20 @@ module "runners" {
     name = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
   }
 
-  block_device_mappings = {
-    # Set the block device name for Ubuntu root device
-    device_name = "/dev/sda1"
-  }
+  block_device_mappings = [
+    {
+     # Set the block device name for Ubuntu root device
+      device_name = "/dev/sda1"
+      delete_on_termination = true
+      encrypted = false
+      iops = null
+      kms_key_id = null
+      snapshot_id = null
+      throughput = null
+      volume_size = 30
+      volume_type = "gp3"
+    }
+  ]
 
   runner_log_files = [
     {

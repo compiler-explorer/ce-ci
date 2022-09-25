@@ -1,4 +1,3 @@
-
 variable "github_app_key_base64" {
     default = <<EOT
 LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlFcFFJQkFBS0NBUUVBOG1VVkNDWkJU
