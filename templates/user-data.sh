@@ -73,7 +73,7 @@ mount -a
 
 # install build packages for ce
 DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    python3.8-venv \
+    python3.9 python3.9-venv \
     squashfs-tools \
     libncurses5
 
