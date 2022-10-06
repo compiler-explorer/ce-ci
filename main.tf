@@ -68,7 +68,7 @@ module "runners" {
       kms_key_id = null
       snapshot_id = null
       throughput = null
-      volume_size = 30
+      volume_size = 50
       volume_type = "gp3"
     }
   ]
