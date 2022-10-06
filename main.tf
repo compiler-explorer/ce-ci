@@ -39,10 +39,14 @@ module "runners" {
     "c5a.8xlarge",
     "c6i.8xlarge",
     "c6a.8xlarge",
+    "c5.12xlarge",
     "c5.16xlarge",
     "c5a.16xlarge",
     "c6i.16xlarge",
     "c6a.16xlarge",
+    "c5a.24xlarge",
+    "c6i.24xlarge",
+    "c6a.24xlarge",
   ]
 
   # TODO I had to add the group manually to the EFS thing, this didn't work, but leaving here for thinking
