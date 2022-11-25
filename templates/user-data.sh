@@ -1,5 +1,16 @@
-#!/bin/bash -x
+#!/bin/bash
 exec > >(tee /var/log/user-data.log | logger -t user-data -s 2>/dev/console) 2>&1
+
+
+# AWS suggest to create a log for debug purpose based on https://aws.amazon.com/premiumsupport/knowledge-center/ec2-linux-log-user-data/
+# As side effect all command, set +x disable debugging explicitly.
+#
+# An alternative for masking tokens could be: exec > >(sed 's/--token\ [^ ]* /--token\ *** /g' > /var/log/user-data.log) 2>&1
+set +x
+
+%{ if enable_debug_logging }
+set -x
+%{ endif }
 
 ${pre_install}
 
@@ -7,17 +18,17 @@ ${pre_install}
 apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get install -y \
     awscli \
-    jq \
-    curl \
-    wget \
-    git \
-    uidmap \
     build-essential \
-    nfs-client \
-    unzip
+    curl \
+    git \
+    iptables \
+    jq \
+    uidmap \
+    unzip \
+    wget
 
-USER_NAME=ubuntu
-USER_ID=$(id -ru $USER_NAME)
+user_name=ubuntu
+user_id=$(id -ru $user_name)
 
 # install and configure cloudwatch logging agent
 wget https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb
@@ -44,42 +55,27 @@ WantedBy=default.target
 
 EOF
 
-echo export XDG_RUNTIME_DIR=/run/user/$USER_ID >>/home/$USER_NAME/.profile
+echo export XDG_RUNTIME_DIR=/run/user/$user_id >>/home/$user_name/.bashrc
 
 systemctl daemon-reload
 systemctl enable user@UID.service
 systemctl start user@UID.service
 
 curl -fsSL https://get.docker.com/rootless >>/opt/rootless.sh && chmod 755 /opt/rootless.sh
-su -l $USER_NAME -c /opt/rootless.sh
-echo export DOCKER_HOST=unix:///run/user/$USER_ID/docker.sock >>/home/$USER_NAME/.profile
-echo export PATH=/home/$USER_NAME/bin:$PATH >>/home/$USER_NAME/.profile
+su -l $user_name -c /opt/rootless.sh
+echo export DOCKER_HOST=unix:///run/user/$user_id/docker.sock >>/home/$user_name/.bashrc
+echo export PATH=/home/$user_name/bin:$PATH >>/home/$user_name/.bashrc
 
 # Run docker service by default
-loginctl enable-linger $USER_NAME
-su -l $USER_NAME -c "systemctl --user enable docker"
+loginctl enable-linger $user_name
+su -l $user_name -c "systemctl --user enable docker"
 
 ${install_runner}
 
 # config runner for rootless docker
 cd /opt/actions-runner/
-echo DOCKER_HOST=unix:///run/user/$USER_ID/docker.sock >>.env
-echo PATH=/home/$USER_NAME/bin:$PATH >>.env
-
-# Mount /efs
-mkdir -p /efs
-echo "fs-db4c8192.efs.us-east-1.amazonaws.com:/ /efs nfs nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport 0 0" >>/etc/fstab
-mount -a
-
-# install build packages for ce
-DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    python3.9 python3.9-venv \
-    squashfs-tools \
-    libncurses5
-
-ln -s /efs/squash-images /opt/squash-images
-ln -s /efs/compiler-explorer /opt/compiler-explorer
-ln -s /efs/wine-stable /opt/wine-stable
+echo DOCKER_HOST=unix:///run/user/$user_id/docker.sock >>.env
+echo PATH=/home/$user_name/bin:$PATH >>.env
 
 ${post_install}
 
