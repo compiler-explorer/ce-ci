@@ -55,27 +55,8 @@ module "runners" {
   enable_ssm_on_runners = true
 
   runner_run_as     = "ubuntu"
-  userdata_template = "./templates/user-data.sh"
-  userdata_post_install = <<-EOT
-DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    nfs-client \
-    python3.9 python3.9-venv \
-    squashfs-tools \
-    libncurses5
-
-mkdir -p /efs
-echo "fs-db4c8192.efs.us-east-1.amazonaws.com:/ /efs nfs nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport 0 0" >>/etc/fstab
-mount -a
-
-ln -s /efs/squash-images /opt/squash-images
-ln -s /efs/compiler-explorer /opt/compiler-explorer
-ln -s /efs/wine-stable /opt/wine-stable
-EOT
-  ami_owners        = ["099720109477"] # Canonical's Amazon account ID
-
-  ami_filter = {
-    name = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
-  }
+  ami_filter        = { name = ["github-runner-ubuntu-focal-amd64-*"] }
+  ami_owners        = ["052730242331"]  # us!
 
   block_device_mappings = [
     {
