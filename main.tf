@@ -13,7 +13,13 @@ module "runners" {
 
   aws_region = local.aws_region
   vpc_id     = "vpc-17209172"
-  subnet_ids = ["subnet-690ed81e", "subnet-1bed1d42"]
+  subnet_ids = [
+    "subnet-690ed81e",
+    "subnet-1bed1d42",
+    "subnet-1df1e135",
+    "subnet-0b7ecd0395d5f2cc9",
+    "subnet-00fe4d85550ee828d"
+    ]
 
   prefix = local.environment
   tags = {
