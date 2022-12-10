@@ -9,7 +9,7 @@ resource "random_password" "random" {
 
 module "runners" {
   source = "philips-labs/github-runner/aws"
-  version = "1.16.1"
+  version = "1.18.0"
 
   aws_region = local.aws_region
   vpc_id     = "vpc-17209172"
@@ -54,6 +54,8 @@ module "runners" {
     "c6i.24xlarge",
     "c6a.24xlarge",
   ]
+
+  instance_allocation_strategy = "price-capacity-optimized"
 
   # TODO I had to add the group manually to the EFS thing, this didn't work, but leaving here for thinking
   runner_additional_security_group_ids = ["sg-0efc9951eaa9b5233"]  # BuilderNodeSecGroup
