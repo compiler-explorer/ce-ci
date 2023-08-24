@@ -9,7 +9,7 @@ resource "random_password" "random" {
 
 module "runners" {
   source = "philips-labs/github-runner/aws"
-  version = "1.18.2"
+  version = "4.1.2"
 
   aws_region = local.aws_region
   vpc_id     = "vpc-17209172"
@@ -63,7 +63,10 @@ module "runners" {
   enable_ssm_on_runners = true
 
   runner_run_as     = "ubuntu"
-  ami_filter        = { name = ["github-runner-ubuntu-focal-amd64-*"] }
+  ami_filter        = { 
+    name = ["github-runner-ubuntu-focal-amd64-*"] 
+    state = ["available"]
+  }
   ami_owners        = ["052730242331"]  # us!
 
   block_device_mappings = [

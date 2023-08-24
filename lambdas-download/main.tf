@@ -1,5 +1,5 @@
 locals {
-  version = "v1.18.2"
+  version = "v4.1.2"
 }
 
 module "lambdas" {
