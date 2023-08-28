@@ -19,6 +19,6 @@ but they go in https://github.com/organizations/compiler-explorer/settings/apps/
 
 
 ## To update the packer image
-* might as well update the git submodule `cd aws-github-runner; git pull` etc
+* might as well update the git submodule `cd terraform-aws-github-runner; git pull` etc
 * Then ./build-image.sh
 * Once built you'll need to rerun the `terraform apply`

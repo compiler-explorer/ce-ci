@@ -9,7 +9,7 @@ resource "random_password" "random" {
 
 module "runners" {
   source = "philips-labs/github-runner/aws"
-  version = "4.1.2"
+  version = "4.2.0"
 
   aws_region = local.aws_region
   vpc_id     = "vpc-17209172"
