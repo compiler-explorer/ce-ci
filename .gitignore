@@ -1,2 +1,3 @@
 .terraform
 *.orig
+manifest.json
