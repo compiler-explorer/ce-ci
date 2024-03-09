@@ -12,7 +12,7 @@ security_group_id = "sg-f53f9f80" # AdminNode (so we can ssh to it) just for bui
 subnet_id = "subnet-690ed81e"
 associate_public_ip_address = "true"
 global_tags = {
-    Site = "Compiler-Explorer"
+    Site = "CompilerExplorer"
     Subsystem = "CI"
 }
 instance_profile = "XaniaBlog"
