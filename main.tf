@@ -79,7 +79,7 @@ module "runners" {
       kms_key_id = null
       snapshot_id = null
       throughput = null
-      volume_size = 128
+      volume_size = 200  # see https://github.com/compiler-explorer/compiler-explorer/issues/6829 we don't know why this needs more
       volume_type = "gp3"
     }
   ]
