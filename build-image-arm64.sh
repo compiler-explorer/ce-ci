@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-TEMPLATE_FILE=terraform-aws-github-runner/images/ubuntu-focal/github_agent.ubuntu.pkr.hcl
+TEMPLATE_FILE=terraform-aws-github-runner/images/ubuntu-focal/github_agent.ubuntu.arm64.pkr.hcl
 
 # REMEMBER TO UPDATE OUR PATCHED VERSION OF terraform-aws-github-runner
 
