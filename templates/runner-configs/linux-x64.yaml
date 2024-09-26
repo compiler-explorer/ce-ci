@@ -1,7 +1,7 @@
 matcherConfig:
   exactMatch: true
   labelMatchers:
-    - [self-hosted, ce, linux]
+    - [self-hosted, ce, linux, x64]
 fifo: true
 delay_webhook_event: 0
 runner_config:
