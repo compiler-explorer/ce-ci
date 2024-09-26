@@ -1,6 +1,6 @@
 output "runners" {
   value = {
-    lambda_syncer_name = module.runners.binaries_syncer.lambda.function_name
+    value = [for s in module.multi-runner.binaries_syncer : s.lambda.function_name]
   }
 }
 
@@ -8,6 +8,6 @@ output "webhook" {
   sensitive = false
   value = {
     secret   = nonsensitive(random_password.random.result)
-    endpoint = module.runners.webhook.endpoint
+    endpoint = module.multi-runner.webhook.endpoint
   }
 }
