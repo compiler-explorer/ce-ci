@@ -16,9 +16,9 @@ set -x
 ${pre_install}
 
 service docker start
-usermod -a -G docker ec2-user
+usermod -a -G docker ubuntu
 
-user_name=ec2-user
+user_name=ubuntu
 
 ${install_runner}
 
