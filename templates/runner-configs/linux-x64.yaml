@@ -41,6 +41,7 @@ runner_config:
       throughput: null
       kms_key_id: null
       snapshot_id: null
+  userdata_template: ./templates/user-data.sh
   runners_maximum_count: 16
   enable_ephemeral_runners: false
   instance_allocation_strategy: price-capacity-optimized
