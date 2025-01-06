@@ -1,0 +1,67 @@
+matcherConfig:
+  exactMatch: true
+  labelMatchers:
+    - [self-hosted, ce, linux, x64]
+fifo: true
+delay_webhook_event: 0
+runner_config:
+  runner_os: linux
+  runner_architecture: x64
+  runner_extra_labels: ce
+  runner_name_prefix: ce-x64_
+  enable_ssm_on_runners: true
+  runner_run_as: "ubuntu"
+  ami_filter: 
+    name:
+      - github-runner-ubuntu-focal-amd64-*
+    state:
+      - available
+  ami_owners:
+    - "052730242331"
+  instance_types:
+    - c5.8xlarge
+    - c5a.8xlarge
+    - c6i.8xlarge
+    - c6a.8xlarge
+    - c5.12xlarge
+    - c5.16xlarge
+    - c5a.16xlarge
+    - c6i.16xlarge
+    - c6a.16xlarge
+    - c5a.24xlarge
+    - c6i.24xlarge
+    - c6a.24xlarge
+  block_device_mappings:
+    - device_name: /dev/sda1
+      delete_on_termination: true
+      volume_type: gp3
+      volume_size: 128
+      encrypted: true
+      iops: null
+      throughput: null
+      kms_key_id: null
+      snapshot_id: null
+  userdata_template: ./templates/user-data.sh
+  runners_maximum_count: 16
+  enable_ephemeral_runners: false
+  instance_allocation_strategy: price-capacity-optimized
+  create_service_linked_role_spot: true
+  scale_down_schedule_expression: cron(* * * * ? *)
+  runner_metadata_options:
+    instance_metadata_tags: disabled
+    http_endpoint: enabled
+    http_tokens: optional
+    http_put_response_hop_limit: 1
+  runner_log_files:
+    - log_group_name: syslog
+      prefix_log_group: true
+      file_path: /var/log/syslog
+      log_stream_name: "{instance_id}"
+    - log_group_name: user_data
+      prefix_log_group: true
+      file_path: /var/log/user-data.log
+      log_stream_name: "{instance_id}/user_data"
+    - log_group_name: runner
+      prefix_log_group: true
+      file_path: /opt/actions-runner/_diag/Runner_**.log
+      log_stream_name: "{instance_id}/runner"
