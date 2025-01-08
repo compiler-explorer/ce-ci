@@ -15,4 +15,4 @@ global_tags = {
     Site = "CompilerExplorer"
     Subsystem = "CI"
 }
-instance_profile = "XaniaBlog"
+iam_instance_profile = "XaniaBlog"
