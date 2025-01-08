@@ -13,7 +13,7 @@ runner_config:
   runner_run_as: "ubuntu"
   ami_filter: 
     name:
-      - github-runner-ubuntu-focal-arm64-*
+      - github-runner-ubuntu-jammy-arm64-*
     state:
       - available
   ami_owners:
