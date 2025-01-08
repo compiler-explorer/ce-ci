@@ -5,9 +5,9 @@ output "runners" {
 }
 
 output "webhook" {
-  sensitive = false
+  sensitive = true
   value = {
-    secret   = nonsensitive(random_password.random.result)
+    secret   = random_password.random.result
     endpoint = module.multi-runner.webhook.endpoint
   }
 }
