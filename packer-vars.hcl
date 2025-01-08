@@ -1,5 +1,4 @@
 custom_shell_commands = [
-"sudo apt-get install -y build-essential curl nfs-client python3.9 python3.9-venv squashfs-tools libncurses5",
 "sudo mkdir /infra",
 "sudo chown ubuntu: /infra",
 "git clone https://github.com/compiler-explorer/infra /infra",
