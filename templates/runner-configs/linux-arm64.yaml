@@ -7,7 +7,7 @@ delay_webhook_event: 0
 runner_config:
   runner_os: linux
   runner_architecture: arm64
-  runner_extra_labels: ce
+  runner_extra_labels: [ce]
   runner_name_prefix: ce-arm64_
   enable_ssm_on_runners: true
   runner_run_as: "ubuntu"
