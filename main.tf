@@ -36,7 +36,7 @@ module "multi-runner" {
     Subsystem = "CI"
   }
   github_app = {
-    key_base64     = var.github_app_key_base64
+    key_base64     = jsondecode(data.aws_secretsmanager_secret_version.ce_ci.secret_string)["github_app_key_base64"]
     id             = var.github_app_id
     webhook_secret = random_password.random.result
   }
