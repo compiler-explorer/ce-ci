@@ -1,3 +1,0 @@
-[submodule "terraform-aws-github-runner"]
-	path = terraform-aws-github-runner
-	url = https://github.com/philips-labs/terraform-aws-github-runner

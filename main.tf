@@ -15,10 +15,12 @@ resource "random_id" "random" {
 }
 
 module "multi-runner" {
-  source                            = "./terraform-aws-github-runner/modules/multi-runner"
-  multi_runner_config               = local.multi_runner_config
-  aws_region                        = local.aws_region
-  vpc_id     = "vpc-17209172"
+  # The double-slash is needed: https://developer.hashicorp.com/terraform/language/modules/sources#modules-in-package-sub-directories
+  source              = "philips-labs/github-runner/aws//modules/multi-runner"
+  version             = "v6.0.1"
+  multi_runner_config = local.multi_runner_config
+  aws_region          = local.aws_region
+  vpc_id              = "vpc-17209172"
   subnet_ids = [
     "subnet-690ed81e",
     "subnet-1bed1d42",
@@ -28,9 +30,9 @@ module "multi-runner" {
   ]
   runners_scale_up_lambda_timeout   = 60
   runners_scale_down_lambda_timeout = 60
-  prefix = local.environment
+  prefix                            = local.environment
   tags = {
-    Site = "CompilerExplorer"
+    Site      = "CompilerExplorer"
     Subsystem = "CI"
   }
   github_app = {
