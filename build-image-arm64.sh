@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-TEMPLATE_FILE=terraform-aws-github-runner/images/ubuntu-jammy-arm64/github_agent.ubuntu.pkr.hcl
+TEMPLATE_FILE=packer/arm64.pkr.hcl
 
 # Remember the version of the build comes from the submodules' version
 # so update the terraform-aws-github-runner checkout accordingly.
