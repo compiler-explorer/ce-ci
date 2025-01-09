@@ -41,3 +41,8 @@ $ terraform output webhook
 - `terraform apply` in `lambdas-download`
 - update the version in `main.tf`
 - `terraform init` in toplevel and `terraform apply`
+
+## To update the GH Actions Runner version
+
+- update the `runner_version` in `packer-vars.hcl` and `packer-vars-arm64.hcl`
+- update the packer images (see above)
