@@ -39,7 +39,6 @@ variable "associate_public_ip_address" {
 variable "instance_type" {
   description = "The instance type Packer will use for the builder"
   type        = string
-  default     = "t4g.small"
 }
 
 variable "iam_instance_profile" {
@@ -97,12 +96,19 @@ data "http" github_runner_release_json {
   }
 }
 
+variable "arch" {
+  description = "Architecture"
+  type        = string
+}
+
 locals {
   runner_version = coalesce(var.runner_version, trimprefix(jsondecode(data.http.github_runner_release_json.body).tag_name, "v"))
+  aws_arch = {"amd64": "x86_64", "arm64": "aarch64"}[var.arch]
+  runner_arch = {"amd64": "x64", "arm64": "arm64" }[var.arch]
 }
 
 source "amazon-ebs" "githubrunner" {
-  ami_name                                  = "github-runner-ubuntu-jammy-arm64-${formatdate("YYYYMMDDhhmm", timestamp())}"
+  ami_name                                  = "github-runner-ubuntu-jammy-${var.arch}-${formatdate("YYYYMMDDhhmm", timestamp())}"
   instance_type                             = var.instance_type
   iam_instance_profile                      = var.iam_instance_profile
   region                                    = var.region
@@ -113,7 +119,7 @@ source "amazon-ebs" "githubrunner" {
 
   source_ami_filter {
     filters = {
-      name                = "*ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-arm64-server-*"
+      name                = "*ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-${var.arch}-server-*"
       root-device-type    = "ebs"
       virtualization-type = "hvm"
     }
@@ -153,7 +159,7 @@ build {
     ]
     inline = concat([
       "sudo cloud-init status --wait",
-      "sudo apt-get update",
+      "sudo apt-get -y update",
       "sudo apt-get -y install ca-certificates curl gnupg lsb-release",
       "sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg",
       "echo deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null",
@@ -162,10 +168,10 @@ build {
       "sudo systemctl enable containerd.service",
       "sudo service docker start",
       "sudo usermod -a -G docker ubuntu",
-      "sudo curl -f https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/arm64/latest/amazon-cloudwatch-agent.deb -o amazon-cloudwatch-agent.deb",
+      "sudo curl -f https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/${var.arch}/latest/amazon-cloudwatch-agent.deb -o amazon-cloudwatch-agent.deb",
       "sudo dpkg -i amazon-cloudwatch-agent.deb",
       "sudo systemctl restart amazon-cloudwatch-agent",
-      "sudo curl -f https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip -o awscliv2.zip",
+      "sudo curl -f https://awscli.amazonaws.com/awscli-exe-linux-${local.aws_arch}.zip -o awscliv2.zip",
       "unzip awscliv2.zip",
       "sudo ./aws/install",
     ], var.custom_shell_commands)
@@ -175,19 +181,19 @@ build {
     content = templatefile("install-runner.sh", {
       ARM_PATCH                       = ""
       S3_LOCATION_RUNNER_DISTRIBUTION = ""
-      RUNNER_ARCHITECTURE             = "arm64"
+      RUNNER_ARCHITECTURE             = local.runner_arch
     })
     destination = "/tmp/install-runner.sh"
   }
 
   provisioner "shell" {
     environment_vars = [
-      "RUNNER_TARBALL_URL=https://github.com/actions/runner/releases/download/v${local.runner_version}/actions-runner-linux-arm64-${local.runner_version}.tar.gz"
+      "RUNNER_TARBALL_URL=https://github.com/actions/runner/releases/download/v${local.runner_version}/actions-runner-linux-${local.runner_arch}-${local.runner_version}.tar.gz"
     ]
     inline = [
       "sudo chmod +x /tmp/install-runner.sh",
       "echo ubuntu | tee -a /tmp/install-user.txt",
-      "sudo RUNNER_ARCHITECTURE=arm64 RUNNER_TARBALL_URL=$RUNNER_TARBALL_URL /tmp/install-runner.sh",
+      "sudo RUNNER_ARCHITECTURE=${local.runner_arch} RUNNER_TARBALL_URL=$RUNNER_TARBALL_URL /tmp/install-runner.sh",
       "echo ImageOS=ubuntu22 | tee -a /opt/actions-runner/.env"
     ]
   }
