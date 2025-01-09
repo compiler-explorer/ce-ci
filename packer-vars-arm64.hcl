@@ -4,6 +4,7 @@ custom_shell_commands = [
 "git clone https://github.com/compiler-explorer/infra /infra",
 "sudo /infra/setup-ci.sh"
 ]
+arch = "arm64"
 instance_type = "r7g.large"
 runner_version = "2.299.1"
 region = "us-east-1"
