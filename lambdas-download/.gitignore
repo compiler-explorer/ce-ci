@@ -1,0 +1,5 @@
+# Basically this is a glorified curl; we only need it to download
+# the zip files. Everything else is ephemeral.
+*.zip
+*.tfstate*
+.terraform.lock.hcl
