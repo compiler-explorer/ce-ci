@@ -16,6 +16,10 @@ module "lambdas" {
     {
       name = "runner-binaries-syncer"
       tag  = local.version
+    },
+    {
+      name = "ami-housekeeper"
+      tag  = local.version
     }
   ]
 }

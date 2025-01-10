@@ -28,6 +28,24 @@ module "multi-runner" {
     "subnet-0b7ecd0395d5f2cc9",
     "subnet-00fe4d85550ee828d"
   ]
+  enable_ami_housekeeper = true
+  ami_housekeeper_cleanup_config = {
+    dryRun = false
+    amiFilters = [
+      {
+        Name   = "state"
+        Values = ["available"]
+      },
+      {
+        Name   = "image-type"
+        Values = ["machine"]
+      },
+      {
+        Name   = "tag:Subsystem"
+        Values = ["CI"]
+      }
+    ]
+  }
   runners_scale_up_lambda_timeout   = 60
   runners_scale_down_lambda_timeout = 60
   prefix                            = local.environment
@@ -44,4 +62,5 @@ module "multi-runner" {
   webhook_lambda_zip                = "lambdas-download/webhook.zip"
   runner_binaries_syncer_lambda_zip = "lambdas-download/runner-binaries-syncer.zip"
   runners_lambda_zip                = "lambdas-download/runners.zip"
+  ami_housekeeper_lambda_zip        = "lambdas-download/ami-housekeeper.zip"
 }

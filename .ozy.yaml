@@ -1,5 +1,5 @@
 apps:
     terraform:
-        version: 1.10.2
+        version: 1.10.4
     packer:
         version: 1.11.2
