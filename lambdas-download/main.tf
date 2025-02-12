@@ -3,7 +3,7 @@ locals {
 }
 
 module "lambdas" {
-  source  = "philips-labs/github-runner/aws//modules/download-lambda"
+  source  = "github-aws-runners/github-runner/aws//modules/download-lambda"
   lambdas = [
     {
       name = "webhook"

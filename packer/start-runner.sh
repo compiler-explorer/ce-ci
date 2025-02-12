@@ -1,5 +1,5 @@
 #!/bin/bash -e
-# Based off of https://github.com/philips-labs/terraform-aws-github-runner/blob/main/modules/runners/templates/start-runner.sh
+# Based off of https://github.com/github-aws-runners/terraform-aws-github-runner/blob/main/modules/runners/templates/start-runner.sh
 
 exec > >(tee /var/log/runner-startup.log | logger -t user-data -s 2>/dev/console) 2>&1
 

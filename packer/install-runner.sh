@@ -1,5 +1,5 @@
 #!/bin/bash -e
-# Based off of https://github.com/philips-labs/terraform-aws-github-runner/blob/main/modules/runners/templates/install-runner.sh
+# Based off of https://github.com/github-aws-runners/terraform-aws-github-runner/blob/main/modules/runners/templates/install-runner.sh
 
 user_name=$(cat /tmp/install-user.txt)
 

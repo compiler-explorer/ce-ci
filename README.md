@@ -1,7 +1,7 @@
 # Compiler Explorer's CI infrastructure
 
 Used to build our compilers, both ad hoc and on a regular basis.
-Uses https://github.com/philips-labs/terraform-aws-github-runner to script
+Uses https://github.com/github-aws-runners/terraform-aws-github-runner to script
 up some custom GH Actions runners that run on our infrastructure on demand, and
 scale back to zero when they're done. Our runners have access to the CE environment
 and they are mostly set up by [the infra repo](https://github.com/compiler-explorer/infra/blob/main/setup-ci.sh).
@@ -35,7 +35,7 @@ $ terraform output webhook
 - Then `./build-image.sh` and `./build-image-arm64.sh`.
 - Once built you'll need to rerun the `terraform apply`.
 
-## To update the version of the philips code
+## To update the version of the github-as-runners code
 
 - update the version in `lambdas-download/main.tf`
 - `terraform apply` in `lambdas-download`

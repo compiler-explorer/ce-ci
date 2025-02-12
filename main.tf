@@ -16,7 +16,7 @@ resource "random_id" "random" {
 
 module "multi-runner" {
   # The double-slash is needed: https://developer.hashicorp.com/terraform/language/modules/sources#modules-in-package-sub-directories
-  source              = "philips-labs/github-runner/aws//modules/multi-runner"
+  source              = "github-aws-runners/github-runner/aws//modules/multi-runner"
   version             = "v6.0.1"
   multi_runner_config = local.multi_runner_config
   aws_region          = local.aws_region
