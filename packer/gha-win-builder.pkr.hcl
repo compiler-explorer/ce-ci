@@ -140,10 +140,9 @@ source "amazon-ebs" "githubrunner" {
     var.global_tags,
     var.snapshot_tags,
   )
-  winrm_insecure = true
-  winrm_port     = 5986
-  winrm_use_ssl  = true
-  winrm_username = "Administrator"
+  winrm_insecure       = true
+  winrm_use_ssl        = true
+  winrm_username       = "Administrator"
 
   launch_block_device_mappings {
     device_name           = "/dev/sda1"
@@ -158,11 +157,6 @@ build {
     "source.amazon-ebs.githubrunner"
   ]
 
-  provisioner "file" {
-    content = templatefile("./start-runner.ps1", { metadata_tags = "enabled" })
-    destination = "C:\\start-runner.ps1"
-  }
-
   provisioner "powershell" {
     inline = concat([
       templatefile("./windows-provisioner.ps1", {
@@ -170,6 +164,12 @@ build {
       })
     ], var.custom_shell_commands)
   }
+
+  provisioner "file" {
+    content = templatefile("./start-runner.ps1", { metadata_tags = "enabled" })
+    destination = "C:\\start-runner.ps1"
+  }
+
   post-processor "manifest" {
     output     = "manifest.json"
     strip_path = true
