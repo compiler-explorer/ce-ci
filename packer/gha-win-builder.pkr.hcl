@@ -140,7 +140,9 @@ source "amazon-ebs" "githubrunner" {
     var.global_tags,
     var.snapshot_tags,
   )
+  user_data_file       = "../terraform-aws-github-runner/images/windows-core-2022/bootstrap_win.ps1"
   winrm_insecure       = true
+  winrm_port           = 5986
   winrm_use_ssl        = true
   winrm_username       = "Administrator"
 
