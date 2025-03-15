@@ -19,7 +19,10 @@ runner_config:
   ami_owners:
     - "052730242331"
   instance_types:
-    - c5d.2xlarge
+    - r5ad.xlarge
+    - r5d.xlarge
+    - r6id.xlarge
+    - r5dn.xlarge
   block_device_mappings:
     - device_name: /dev/sda1
       delete_on_termination: true
