@@ -33,7 +33,7 @@ runner_config:
       throughput: null
       kms_key_id: null
       snapshot_id: null
-  runners_maximum_count: 4
+  runners_maximum_count: 16
   enable_ephemeral_runners: false
   instance_allocation_strategy: price-capacity-optimized
   create_service_linked_role_spot: true
