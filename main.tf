@@ -30,7 +30,7 @@ module "multi-runner" {
   ]
   enable_ami_housekeeper = true
   ami_housekeeper_cleanup_config = {
-    dryRun = false
+    dryRun = true  # temporary for now as having upgraded it seemed to clean everything
     amiFilters = [
       {
         Name   = "state"
