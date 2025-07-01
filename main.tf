@@ -28,9 +28,9 @@ module "multi-runner" {
     "subnet-0b7ecd0395d5f2cc9",
     "subnet-00fe4d85550ee828d"
   ]
-  enable_ami_housekeeper = false # Disabled: https://github.com/github-aws-runners/terraform-aws-github-runner/issues/4571
+  enable_ami_housekeeper = true
   ami_housekeeper_cleanup_config = {
-    dryRun = false # If we re-enable do try with this = true first...
+    dryRun = false # tested 2025-07-01 with v6.5.10 and working again
     amiFilters = [
       {
         Name   = "state"
