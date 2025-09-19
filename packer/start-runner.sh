@@ -217,6 +217,27 @@ tee /opt/actions-runner/.setup_info <<EOL
 ]
 EOL
 
+mount_opt() {
+    mount -a
+
+    mkdir -p /opt/compiler-explorer
+    mountpoint /opt/compiler-explorer || mount --bind /efs/compiler-explorer /opt/compiler-explorer
+
+    mkdir -p /opt/intel
+    mountpoint /opt/intel || mount --bind /efs/intel /opt/intel
+
+    mkdir -p /opt/arm
+    mountpoint /opt/arm || mount --bind /efs/arm /opt/arm
+
+    mkdir -p /opt/qnx
+    mountpoint /opt/qnx || mount --bind /efs/qnx /opt/qnx
+
+    [ -f /opt/.health ] || touch /opt/.health
+    mountpoint /opt/.health || mount --bind /efs/.health /opt/.health
+}
+
+mount_opt
+
 ## Start the runner
 echo "Starting runner after $(awk '{print int($1/3600)":"int(($1%3600)/60)":"int($1%60)}' /proc/uptime)"
 echo "Starting the runner as user $run_as"
