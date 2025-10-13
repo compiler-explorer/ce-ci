@@ -32,11 +32,17 @@ $ terraform output webhook
 ## To update the packer image
 
 - Make any changes in the `./packer` directory, as needed.
-- Then `./build-image.sh` and `./build-image-arm64.sh`.
+- Then run the appropriate build scripts:
+  - `./build-image.sh` (x64 standard Linux runners)
+  - `./build-image-arm64.sh` (ARM64 Linux runners)
+  - `./build-image-lin-builder.sh` (Linux x64 library builder runners)
+  - `./build-image-win-builder.sh` (Windows builder runners)
 - Once built you'll need to rerun the `terraform apply`.
 
-## To update the version of the github-as-runners code
+## To update the version of the github-aws-runners code
 
+- Find the package in https://github.com/github-aws-runners/terraform-aws-github-runner/releases
+  - check for any incompatibilities compared to the current version
 - update the version in `lambdas-download/main.tf`
 - `terraform apply` in `lambdas-download`
 - update the version in `main.tf`
@@ -44,5 +50,8 @@ $ terraform output webhook
 
 ## To update the GH Actions Runner version
 
-- update the `runner_version` in `packer-vars.hcl` and `packer-vars-arm64.hcl`
+- update the `runner_version` in:
+  - `packer-vars.hcl` (x64 standard Linux and x64 library builder)
+  - `packer-vars-arm64.hcl` (ARM64 Linux)
+  - `packer-vars-win-builder.hcl` (Windows builder)
 - update the packer images (see above)
