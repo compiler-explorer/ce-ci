@@ -37,7 +37,7 @@ $ terraform output webhook
   - `./build-image-arm64.sh` (ARM64 Linux runners)
   - `./build-image-lin-builder.sh` (Linux x64 library builder runners)
   - `./build-image-win-builder.sh` (Windows builder runners)
-- Once built you'll need to rerun the `terraform apply`.
+- Once built you'll need to rerun the `terraform apply`. I recommend you `terraform plan` and review that, then apply the plan after it looks good.
 
 ## To update the version of the github-aws-runners code
 
@@ -46,7 +46,7 @@ $ terraform output webhook
 - update the version in `lambdas-download/main.tf`
 - `terraform apply` in `lambdas-download`
 - update the version in `main.tf`
-- `terraform init` in toplevel and `terraform apply`
+- `terraform init` in toplevel and `terraform apply`. I recommend you `terraform plan` and review that, then apply the plan after it looks good.
 
 ## To update the GH Actions Runner version
 
