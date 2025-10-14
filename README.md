@@ -47,6 +47,7 @@ $ terraform output webhook
 - `terraform apply` in `lambdas-download`
 - update the version in `main.tf`
 - `terraform init` in toplevel and `terraform apply`. I recommend you `terraform plan` and review that, then apply the plan after it looks good.
+- **REAPPLY terraform in the main infra repo** There are some important SGs/permissions that need to be added to any recreated infrastructure
 
 ## To update the GH Actions Runner version
 
