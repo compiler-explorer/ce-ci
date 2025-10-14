@@ -3,7 +3,20 @@ locals {
   aws_region  = "us-east-1"
 
   # Load runner configurations from Yaml files
-  multi_runner_config = { for c in fileset("${path.module}/templates/runner-configs", "*.yaml") : trimsuffix(c, ".yaml") => yamldecode(file("${path.module}/templates/runner-configs/${c}")) }
+  multi_runner_config_base = { for c in fileset("${path.module}/templates/runner-configs", "*.yaml") : trimsuffix(c, ".yaml") => yamldecode(file("${path.module}/templates/runner-configs/${c}")) }
+
+  # Augment builder runner configs with IAM policies from infra
+  multi_runner_config = { for key, config in local.multi_runner_config_base : key => merge(
+    config,
+    {
+      runner_config = merge(
+        config.runner_config,
+        {
+          runner_iam_role_managed_policy_arns = local.policies
+        }
+      )
+    }
+  ) }
 }
 
 resource "random_password" "random" {
