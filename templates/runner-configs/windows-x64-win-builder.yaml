@@ -10,14 +10,15 @@ runner_config:
   runner_extra_labels: [ce]
   runner_name_prefix: ce-x64_
   enable_ssm_on_runners: true
-  ami_filter: 
-    name:
-      - github-runner-win-builder-*
-    state:
-      - available
+  ami:
+    filter:
+      name:
+        - github-runner-win-builder-*
+      state:
+        - available
+    owners:
+      - "052730242331"
   enable_userdata: false
-  ami_owners:
-    - "052730242331"
   instance_types:
     - r5ad.xlarge
     - r5d.xlarge

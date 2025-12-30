@@ -11,14 +11,15 @@ runner_config:
   runner_name_prefix: ce-arm64_
   enable_ssm_on_runners: true
   runner_run_as: "ubuntu"
-  ami_filter: 
-    name:
-      - github-runner-ubuntu-jammy-arm64-*
-    state:
-      - available
+  ami:
+    filter:
+      name:
+        - github-runner-ubuntu-jammy-arm64-*
+      state:
+        - available
+    owners:
+      - "052730242331"
   enable_userdata: false
-  ami_owners:
-    - "052730242331"
   instance_types:
     - r7g.2xlarge
     - r7g.4xlarge
