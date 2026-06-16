@@ -82,6 +82,7 @@ apt update -y -q && apt upgrade -y -q && apt upgrade -y -q && apt install -y -q 
     curl \
     file \
     flex \
+    libfl-dev \
     gawk \
     git \
     libc6-dev-i386 \
