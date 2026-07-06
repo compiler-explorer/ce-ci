@@ -96,6 +96,40 @@ After building new AMIs, run `terraform apply` to update the infrastructure.
 
 See instructions in README.md
 
+## Testing changes after a `terraform apply`
+
+There is no PR/plan-review gate that proves runners actually work — the workflow
+is: `terraform apply`, then trigger real GitHub Actions workflows to exercise the
+change. Runner instances are ephemeral and per-job, so config changes only take
+effect on the *next* runner launched of each type; nothing running is disturbed.
+
+The [`infra`](https://github.com/compiler-explorer/infra) repo has
+`workflow_dispatch` workflows (gated to `mattgodbolt`/`partouf`) that are the
+handiest probes. Dispatch with `gh`, watch with `gh run watch <id> --repo
+compiler-explorer/infra --exit-status`:
+
+- **Any runner, arbitrary command** — `adhoc-command.yml` (input `size=small|
+  medium|large`) and `adhoc-command-lin-builder.yml`. Run a shell command on the
+  target tier. Ideal for quick checks like IMDSv2 or SSM.
+- **Real Linux library build** — `lin-lib-build.yaml` with a *single* small
+  library + *single* compiler (e.g. `library=fmt`, `compiler=g151`) instead of
+  `all`/`popular-compilers-only`, to prove the builder AMI's toolchain end to end.
+- **Real Windows library build** — `win-lib-build.yaml`, e.g. `library=fmt`,
+  `compiler=vcpp_v19_51_VS18_6_x64`. Windows boots slowly (~7 min; note the
+  `runner_boot_time_in_minutes: 20`), so allow time. Use the compiler-explorer
+  MCP (`list_compilers`) to find valid compiler ids.
+
+Useful checks:
+- **IMDSv2**: on a runner, `aws sts get-caller-identity` must succeed (SDK path),
+  a tokenless `curl http://169.254.169.254/latest/meta-data/...` must return
+  `401`, and a tokened GET must return `200`.
+- **What actually launched**: `aws ec2 describe-instances --region us-east-1
+  --filters "Name=tag:ghr:environment,Values=ce-ci-<tier>"` shows instance type
+  and lifecycle (spot/on-demand) — e.g. to confirm new instance types are in play.
+- **Why scale-up did something**: the scale-up Lambda logs
+  (`/aws/lambda/ce-ci-<tier>-scale-up`) explain launch decisions.
+- Always confirm a follow-up `terraform plan` reports no drift.
+
 ## Important Details
 
 ### AMI Housekeeper
