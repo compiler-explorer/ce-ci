@@ -22,6 +22,7 @@ runner_config:
   enable_userdata: false
   instance_types:
     # 16 vCPUs
+    - c7a.4xlarge       # AMD Zen4 (Genoa)
     - c6a.4xlarge       # AMD EPYC
     - c5a.4xlarge       # AMD EPYC
     - c7i-flex.4xlarge  # Intel Sapphire Rapids

@@ -20,18 +20,31 @@ runner_config:
       - "052730242331"
   enable_userdata: false
   instance_types:
-    - r5ad.xlarge
-    - r5d.xlarge
-    - r6id.xlarge
-    - r5dn.xlarge
+    # Newer generations (memory-optimized, 32 GiB) — preferred
+    - r7a.xlarge        # AMD Zen4 (Genoa)
+    - r7i.xlarge        # Intel Sapphire Rapids
+    - r7iz.xlarge       # Intel Sapphire Rapids (high-frequency)
+    # Older generations retained for spot-capacity diversity (local NVMe)
+    - r6id.xlarge       # Intel Ice Lake
+    - r5ad.xlarge       # AMD EPYC
+    - r5d.xlarge        # Intel
+    - r5dn.xlarge       # Intel (network-optimized)
+  # Windows builders run on spot (the module default): unlike the Linux x64 tiers
+  # (kept on-demand because we need them frequently and they hold up when capacity
+  # is tight), Windows builds are infrequent enough to tolerate the occasional
+  # spot interruption in exchange for the saving.
+  instance_target_capacity_type: spot
   block_device_mappings:
     - device_name: /dev/sda1
       delete_on_termination: true
       volume_type: gp3
       volume_size: 128
       encrypted: true
-      iops: null
-      throughput: null
+      # Windows library builds are I/O-heavy; lift the gp3 volume above the
+      # 3000 IOPS / 125 MB/s baseline. Volume is ephemeral (deleted on
+      # termination) so the extra cost only applies while a builder runs.
+      iops: 6000
+      throughput: 250
       kms_key_id: null
       snapshot_id: null
   runners_maximum_count: 16

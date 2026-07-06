@@ -22,19 +22,25 @@ runner_config:
   enable_userdata: false
   instance_types:
     # 32 vCPUs
+    - c7a.8xlarge       # AMD Zen4 (Genoa)
     - c6a.8xlarge       # AMD EPYC
     - c5a.8xlarge       # AMD EPYC
+    - c7i.8xlarge       # Intel Sapphire Rapids (non-flex: no sustained-throughput throttle)
     - c7i-flex.8xlarge  # Intel Sapphire Rapids
     - c6i.8xlarge       # Intel Ice Lake
     # 48 vCPUs
+    - c7a.12xlarge      # AMD Zen4 (Genoa)
     - c6a.12xlarge      # AMD EPYC
     - c5a.12xlarge      # AMD EPYC
+    - c7i.12xlarge      # Intel Sapphire Rapids (non-flex)
     - c7i-flex.12xlarge # Intel Sapphire Rapids
     - c5.12xlarge       # Intel Skylake/Cascade Lake
     - c6i.12xlarge      # Intel Ice Lake
     # 64 vCPUs
+    - c7a.16xlarge      # AMD Zen4 (Genoa)
     - c6a.16xlarge      # AMD EPYC
     - c5a.16xlarge      # AMD EPYC
+    - c7i.16xlarge      # Intel Sapphire Rapids (non-flex)
     - c7i-flex.16xlarge # Intel Sapphire Rapids
     - c6i.16xlarge      # Intel Ice Lake
   instance_target_capacity_type: on-demand
@@ -44,8 +50,12 @@ runner_config:
       volume_type: gp3
       volume_size: 128
       encrypted: true
-      iops: null
-      throughput: null
+      # Library builds are I/O-heavy (checkout, conan, compile, package); lift the
+      # gp3 volume above the 3000 IOPS / 125 MB/s baseline. Volumes are ephemeral
+      # (deleted on termination) so the extra provisioned cost only applies while a
+      # builder is actually running.
+      iops: 6000
+      throughput: 250
       kms_key_id: null
       snapshot_id: null
   runners_maximum_count: 16
