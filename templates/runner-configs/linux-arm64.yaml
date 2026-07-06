@@ -23,6 +23,10 @@ runner_config:
   instance_types:
     - r7g.2xlarge
     - r7g.4xlarge
+  # arm64 builds run on spot (the module default): they are less time-critical
+  # than x64 CI, so we trade the small risk of interruption for lower cost. The
+  # x64 tiers deliberately use on-demand instead.
+  instance_target_capacity_type: spot
   block_device_mappings:
     - device_name: /dev/sda1
       delete_on_termination: true
@@ -41,7 +45,7 @@ runner_config:
   runner_metadata_options:
     instance_metadata_tags: enabled
     http_endpoint: enabled
-    http_tokens: optional
+    http_tokens: required
     http_put_response_hop_limit: 1
   runner_log_files:
     - log_group_name: syslog
