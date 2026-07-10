@@ -130,6 +130,39 @@ Useful checks:
   (`/aws/lambda/ce-ci-<tier>-scale-up`) explain launch decisions.
 - Always confirm a follow-up `terraform plan` reports no drift.
 
+## Debugging a job stuck in "Queued"
+
+Known failure mode (bit us 2026-07-09): a stale AMI forces the runner to
+self-update and restart on boot, GitHub's job delivery races the restart, and
+the job wedges — GitHub pins it to the half-registered runner and never offers
+it to anyone again, while the scale-down lambda reaps the (idle-looking) runner
+after `minimum_running_time_in_minutes` (default 5). Scale-up is webhook-driven
+and the job's one `queued` event is already consumed, so the job stays queued
+forever. See README "Keep the runner version and AMIs fresh".
+
+Diagnosis walk:
+
+1. `gh api repos/<owner>/<repo>/actions/jobs/<job-id>` — labels tell you the
+   tier; `runner_id: null` + `status: queued` long after creation means never
+   assigned.
+2. Scale-up logs (`/aws/lambda/ce-ci-<tier>-scale-up`) — did an instance launch
+   for the webhook event? Note the instance id.
+3. `aws ec2 describe-instances --instance-ids <id>` — terminated ~6 min after
+   launch with "User initiated" means the scale-down lambda reaped it.
+4. Scale-down logs (`/aws/lambda/ce-ci-<tier>-scale-down`) — shows the
+   busy-check flapping and the deregistration.
+5. Runner diag log (`/github-self-hosted-runners/ce-ci-<tier>/runner`, stream
+   `<instance-id>/runner`) — "Downloading X.Y.Z runner" + a burst of "Skip
+   message deletion for job request message" during the update restart is the
+   smoking gun.
+6. Litmus test for a wedged job: dispatch `adhoc-command.yml` at the same tier.
+   If the probe runs fine on a fresh runner while the original job stays queued
+   even with that runner idle, the job itself is poisoned on GitHub's side.
+
+Fix: `gh run cancel <run-id>` then `gh run rerun <run-id>` — the re-run makes a
+fresh job and webhook event. Prevention: keep `runner_version` in the
+packer-vars files current and rebuild AMIs (see README).
+
 ## Important Details
 
 ### AMI Housekeeper

@@ -55,3 +55,45 @@ $ terraform output webhook
   - `packer-vars-arm64.hcl` (ARM64 Linux)
   - `packer-vars-win-builder.hcl` (Windows builder)
 - update the packer images (see above)
+
+## Keep the runner version and AMIs fresh, or jobs can get stuck
+
+The `runner_version` pinned above is baked into the AMIs. If it falls behind
+the current [actions/runner release](https://github.com/actions/runner/releases),
+GitHub forces every freshly-booted runner to self-update and restart before it
+will take jobs. That restart races against GitHub's job delivery, and can
+permanently wedge a job (seen for real on 2026-07-09):
+
+- the queued job gets internally pinned to the runner that restarted mid-delivery,
+  and GitHub never offers it to any runner again — not even an idle one with
+  matching labels;
+- the idle runner is then reaped by the scale-down lambda (it runs every minute;
+  runners are eligible after `minimum_running_time_in_minutes`, default 5);
+- scale-up is purely webhook-driven and the job's one `queued` event was already
+  consumed, so nothing ever launches again. The job sits "Queued" forever.
+
+**To unstick a wedged job**: cancel and re-run the workflow — the re-run creates
+a fresh job and a fresh webhook event:
+
+```sh
+gh run cancel <run-id> --repo compiler-explorer/<repo>
+gh run rerun <run-id> --repo compiler-explorer/<repo>
+```
+
+**To prevent it**: bump `runner_version` and rebuild the AMIs whenever runners
+start self-updating on boot (check `/github-self-hosted-runners/ce-ci-*/syslog`
+in CloudWatch for "Downloading X.Y.Z runner" lines, or just rebuild every month
+or two).
+
+### job_retry: worth enabling, especially for ephemeral runners
+
+The module has an (experimental) `runner_config.job_retry` option: after each
+scale-up it queues a delayed re-check, and if the job is still queued it
+re-publishes the scale-up event, launching another runner. Reading the v7.9.0
+lambda source, it is *not* gated on ephemeral runners despite the docs' framing —
+it works for our non-ephemeral config too. Defaults: `delay_in_seconds = 300`,
+`delay_backoff = 2`, `max_attempts = 1`. Caveats: it costs extra GitHub App API
+calls, and it would not have cured the 2026-07-09 wedge (GitHub refused to hand
+that job to *any* runner; only cancel + re-run cleared it). It becomes much more
+attractive when we move to ephemeral runners, where a lost webhook or runner
+otherwise strands the job as a matter of course.
