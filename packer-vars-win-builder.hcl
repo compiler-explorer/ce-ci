@@ -2,7 +2,7 @@ custom_shell_commands = [
 ]
 arch = "amd64"
 instance_type = "c5.large"
-runner_version = "2.330.0"
+runner_version = "2.335.1"
 region = "us-east-1"
 security_group_id = "sg-f53f9f80"
 subnet_id = "subnet-690ed81e"
