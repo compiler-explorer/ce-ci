@@ -116,9 +116,12 @@ apt-get install -y -q build-essential libssl-dev zlib1g-dev \
                 libbz2-dev libreadline-dev libsqlite3-dev curl git \
                 libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
 
+# Under /opt rather than /root: the library-build job runs as ubuntu (see
+# runner_run_as in the runner configs) and cannot traverse /root, so a pyenv
+# there is unreachable and python silently falls back to the system one.
+export PYENV_ROOT="/opt/pyenv"
 curl https://pyenv.run | bash
 
-export PYENV_ROOT="/root/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 
 pyenv install 3.10.16 && \
@@ -126,9 +129,12 @@ pyenv install 3.10.16 && \
 
 mkdir -p /tmp/build
 
-export PATH="/root/.pyenv/shims:/root/.pyenv/versions/3.10.16/bin:$PATH"
+export PATH="$PYENV_ROOT/shims:$PYENV_ROOT/versions/3.10.16/bin:$PATH"
 
 python -m pip install conan==1.59
+
+# After conan lands in site-packages, so the ubuntu-run build job can read it.
+chmod -R a+rX "$PYENV_ROOT"
 
 conan remote clean && \
 conan remote add ceserver https://conan.compiler-explorer.com/ True

@@ -119,7 +119,7 @@ source "amazon-ebs" "githubrunner" {
 
   source_ami_filter {
     filters = {
-      name                = "*ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-${var.arch}-server-*"
+      name                = "*ubuntu/images/*ubuntu-noble-24.04-${var.arch}-server-*"
       root-device-type    = "ebs"
       virtualization-type = "hvm"
     }
@@ -131,7 +131,7 @@ source "amazon-ebs" "githubrunner" {
     var.global_tags,
     var.ami_tags,
     {
-      OS_Version    = "ubuntu-jammy"
+      OS_Version    = "ubuntu-noble"
       Release       = "Latest"
       Base_AMI_Name = "{{ .SourceAMIName }}"
   })
@@ -194,7 +194,7 @@ build {
       "sudo chmod +x /tmp/install-builder-runner.sh",
       "echo ubuntu | tee -a /tmp/install-user.txt",
       "sudo RUNNER_ARCHITECTURE=${local.runner_arch} RUNNER_TARBALL_URL=$RUNNER_TARBALL_URL /tmp/install-builder-runner.sh",
-      "echo ImageOS=ubuntu22 | tee -a /opt/actions-runner/.env"
+      "echo ImageOS=ubuntu24 | tee -a /opt/actions-runner/.env"
     ]
   }
 

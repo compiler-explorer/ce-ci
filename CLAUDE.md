@@ -38,7 +38,7 @@ Three different Packer configurations build AMIs:
 
 All images:
 
-- Start from Ubuntu 22.04 Jammy (Linux) or Windows base
+- Start from Ubuntu 24.04 Noble (Linux) or Windows base
 - Install Docker, AWS CLI, CloudWatch agent
 - Clone and run setup from [CE infra repo](https://github.com/compiler-explorer/infra)
 - Install GitHub Actions runner software at `/opt/actions-runner`

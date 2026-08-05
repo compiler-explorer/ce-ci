@@ -14,7 +14,7 @@ runner_config:
   ami:
     filter:
       name:
-        - github-runner-ubuntu-jammy-arm64-*
+        - github-runner-ubuntu-noble-arm64-*
       state:
         - available
     owners:
