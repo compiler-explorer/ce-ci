@@ -1,7 +1,8 @@
 matcherConfig:
   exactMatch: true
   labelMatchers:
-    - [self-hosted, ce, linux, x64]
+    - [self-hosted, ce, linux, x64, large]
+    - [self-hosted, ce, linux, x64] # transitional, callers migrating off it: see #24
 fifo: true
 delay_webhook_event: 0
 runner_config:
