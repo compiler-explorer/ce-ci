@@ -1,6 +1,11 @@
 matcherConfig:
   exactMatch: true
   labelMatchers:
+    # `large` is what callers should ask for: it is the only label of the three x64
+    # pools that small and medium do not also carry, so it is the only one that actually
+    # pins a job to this pool. The bare set below is kept while callers migrate off it
+    # (see compiler-explorer/ce-ci#24); it matches every x64 runner, small ones included.
+    - [self-hosted, ce, linux, x64, large]
     - [self-hosted, ce, linux, x64]
 fifo: true
 delay_webhook_event: 0
