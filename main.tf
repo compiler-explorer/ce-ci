@@ -72,8 +72,9 @@ module "multi-runner" {
     webhook_secret = random_password.random.result
   }
 
-  webhook_lambda_zip                = "lambdas-download/webhook.zip"
-  runner_binaries_syncer_lambda_zip = "lambdas-download/runner-binaries-syncer.zip"
-  runners_lambda_zip                = "lambdas-download/runners.zip"
-  ami_housekeeper_lambda_zip        = "lambdas-download/ami-housekeeper.zip"
+  # Paths (and the plan-time staleness check on them) live in lambda-zips.tf.
+  webhook_lambda_zip                = local.lambda_zips["webhook"]
+  runner_binaries_syncer_lambda_zip = local.lambda_zips["runner-binaries-syncer"]
+  runners_lambda_zip                = local.lambda_zips["runners"]
+  ami_housekeeper_lambda_zip        = local.lambda_zips["ami-housekeeper"]
 }

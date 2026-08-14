@@ -19,6 +19,10 @@ terraform {
       source  = "hashicorp/aws",
       version = "~> 6.21"
     }
+    http = {
+      source  = "hashicorp/http"
+      version = "~> 3.5"
+    }
   }
   backend "s3" {
     bucket = "compiler-explorer"

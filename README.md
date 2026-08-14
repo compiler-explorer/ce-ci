@@ -43,10 +43,34 @@ $ terraform output webhook
 
 - Find the package in https://github.com/github-aws-runners/terraform-aws-github-runner/releases
   - check for any incompatibilities compared to the current version
-- update the version in `lambdas-download/main.tf`
-- `terraform apply` in `lambdas-download`
-- update the version in `main.tf`
+- update the version in **all three** places: `lambdas-download/main.tf`
+  (`local.version`), `main.tf` (the `multi-runner` module `version`), and
+  `lambda-zips.tf` (`local.lambda_version`)
+- `terraform apply` in `lambdas-download`. This is what actually downloads the
+  new zips, and it is the step everyone forgets
 - `terraform init` in toplevel and `terraform apply`. I recommend you `terraform plan` and review that, then apply the plan after it looks good.
+
+### The lambda zips are checked at plan time
+
+The four lambda zips are not in git; `lambdas-download/` curls them from the
+upstream release, and terraform deploys whatever is on disk. Bumping the pinned
+version does *not* refresh them, so skipping the `lambdas-download` apply
+silently redeploys ancient lambda code alongside new configuration, which is
+exactly what happened, undetected, until 2026-08-14.
+
+`lambda-zips.tf` therefore compares the zips on disk against the digests GitHub
+publishes for the pinned tag, and `terraform plan` warns if they differ:
+
+```
+│ Warning: Check block assertion failed
+│ These lambda zips in lambdas-download/ are not the ones published for v7.9.0:
+│ runners, webhook
+```
+
+It is a `check` block, so it warns rather than blocking the plan. If GitHub is
+unreachable or rate-limiting (the call is unauthenticated, 60/hour), you instead
+get "Could not verify the lambda zips: GitHub returned HTTP ..." and no
+verification happens. That warning is worth reading, not ignoring.
 
 ## To update the GH Actions Runner version
 

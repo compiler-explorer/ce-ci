@@ -25,6 +25,7 @@ Each config specifies label matchers, AMI filters, instance types, scaling rules
 
 - `main.tf`: Core multi-runner module configuration
 - `lambdas-download/`: Downloads Lambda functions from terraform-aws-github-runner releases
+- `lambda-zips.tf`: Paths of those zips, plus a plan-time `check` that they match the digests published for the pinned tag (guards against forgetting the separate `lambdas-download` apply)
 - `providers.tf`, `variables.tf`, `secrets.tf`: Standard Terraform configuration
 - `outputs.tf`: Exports webhook URL and secret (sensitive)
 
