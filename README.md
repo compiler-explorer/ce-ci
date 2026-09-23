@@ -29,6 +29,19 @@ as they are sensitive secret values, shared with GitHub only:
 $ terraform output webhook
 ```
 
+## Before any top-level `terraform apply`: refresh the Lambda zips
+
+The Lambda zips in `lambdas-download/` and that directory's state are local and not in git.
+On a machine that hasn't run it since the last module upgrade, the top-level plan will
+quietly "update" every Lambda back to whatever old zips are lying around (seen for real:
+v6.5.10 zips against the v7.9.0 module). So first:
+
+```sh
+cd lambdas-download && terraform apply && cd ..
+```
+
+Then check the top-level plan touches no `aws_lambda_function` unless you meant it to.
+
 ## To update the packer image
 
 - Make any changes in the `./packer` directory, as needed.
